@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useWallet } from "@/context/WalletProvider";
 import { jobs } from "../dummyjobs";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
@@ -8,6 +9,43 @@ import JobFilter from "./JobFilters";
 
 const JobCard = () => {
   const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const { publicKey, connected } = useWallet();
+  const [statusMap, setStatusMap] = useState<Record<number, { state: string; message?: string }>>({});
+
+  const applyToJob = async (job: any, idx: number) => {
+    if (!connected || !publicKey) {
+      setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: "Connect your wallet to apply." } }));
+      return;
+    }
+
+    setStatusMap((s) => ({ ...s, [idx]: { state: "loading" } }));
+
+    try {
+      const payload = {
+        jobTitle: job.title,
+        jobShortDescription: job.shortDescription,
+        location: job.location,
+        applicant: publicKey,
+      };
+
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.status === 201) {
+        setStatusMap((s) => ({ ...s, [idx]: { state: "success", message: "Application submitted." } }));
+      } else if (res.status === 409) {
+        setStatusMap((s) => ({ ...s, [idx]: { state: "duplicate", message: "You have already applied." } }));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: data?.message || "Failed to submit application." } }));
+      }
+    } catch (err) {
+      setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: "Network error." } }));
+    }
+  };
 
   const handleFilterChange = (filters: {
     search: string;
@@ -59,7 +97,25 @@ const JobCard = () => {
                   {info.shortDescription}
                 </h2>
                 </div>
-                <button onClick={() => alert("Application sent!")} className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6 g:my-0 md:my-0 my-3">Apply</button>
+                <div>
+                  <button
+                    onClick={() => applyToJob(info, index)}
+                    disabled={statusMap[index]?.state === "loading" || statusMap[index]?.state === "success"}
+                    className="border rounded-md py-2 hover:bg-black hover:text-white text-[14px] px-6 g:my-0 md:my-0 my-3 disabled:opacity-50"
+                  >
+                    {statusMap[index]?.state === "loading"
+                      ? "Applying..."
+                      : statusMap[index]?.state === "success"
+                      ? "Applied"
+                      : "Apply"}
+                  </button>
+
+                  {statusMap[index] && (
+                    <p className="text-sm mt-2 text-gray-600">
+                      {statusMap[index]?.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="text-[14px] flex justify-between lg:items-center md:items-center mt-auto text-[#777679] flex-col lg:flex-row md:flex-row">
