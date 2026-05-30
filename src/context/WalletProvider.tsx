@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, {
@@ -9,12 +8,6 @@ import React, {
   ReactNode,
 } from "react";
 import { Horizon, Networks } from "@stellar/stellar-sdk";
-
-'use client';
-
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { Horizon, Networks } from '@stellar/stellar-sdk';
-
 import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { kit as getKitInstance } from "@/lib/stellar-wallets-kit";
 
@@ -73,7 +66,6 @@ export function WalletProvider({
   const [balances, setBalances] = useState<Balance[]>([]);
   const [server] = useState(() => new Server(horizonUrl));
 
-
   const handleWalletSelection = useCallback(
     async (id: string, name: string) => {
       const kit = getKitInstance();
@@ -91,81 +83,15 @@ export function WalletProvider({
         localStorage.setItem("stellar_wallet_name", name);
       }
 
-
-  const handleWalletSelection = useCallback(async (id: string, name: string) => {
-    const kit = getKitInstance();
-    kit.setWallet(id);
-    const { address } = await kit.getAddress();
-
-    setPublicKey(address);
-    setWalletName(name);
-    setConnected(true);
-
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('stellar_wallet_connected', 'true');
-      localStorage.setItem('stellar_wallet_id', id);
-      localStorage.setItem('stellar_wallet_address', address);
-      localStorage.setItem('stellar_wallet_name', name);
-    }
-
-    try {
-      const account = await server.accounts().accountId(address).call();
-      setBalances(account.balances);
-    } catch {
-      setBalances([]);
-    }
-  }, [server]);
-
-  const connect = useCallback(async (walletId?: string) => {
-    try {
-      const kit = getKitInstance();
-      
-      if (walletId) {
-        // Direct Connection (No Modal)
-        // Find the module name for the UI state
-        const modules = (
-          (kit as unknown as {
-            options?: { modules?: Array<{ id: string; name?: string }> }
-          }).options?.modules ?? []
-        );
-        const target = modules.find((m) => m.id === walletId);
-        await handleWalletSelection(walletId, target?.name || walletId);
-      } else {
-        // Fallback to Modal
-        await kit.openModal({
-          modalTitle: "Connect to your favorite wallet",
-          onWalletSelected: async (option: ISupportedWallet) => {
-            await handleWalletSelection(option.id, option.name);
-          },
-        });
-      }
-    } catch (error: unknown) {
-      const errorData = error as {
-        message?: string;
-        code?: string;
-        name?: string;
-        stack?: string;
-      };
-
-      // Improve visibility into what the SDK is actually throwing
-      console.error("Connection failed raw value:", error);
-      console.error("Connection failed details:", {
-        message: errorData.message,
-        code: errorData.code,
-        name: errorData.name,
-        stack: errorData.stack,
-      });
-
       try {
         const account = await server.accounts().accountId(address).call();
         setBalances(account.balances);
-      } catch (e) {
+      } catch {
         setBalances([]);
       }
     },
     [server],
   );
-
 
   const connect = useCallback(
     async (walletId?: string) => {
@@ -218,14 +144,6 @@ export function WalletProvider({
     },
     [handleWalletSelection],
   );
-
-      // Always rethrow an Error instance so callers get a consistent shape
-      throw error instanceof Error
-        ? error
-        : new Error(errorData?.message || "Wallet connection failed");
-    }
-  }, [handleWalletSelection]);
-
 
   const disconnect = useCallback(async () => {
     await getKitInstance().disconnect();

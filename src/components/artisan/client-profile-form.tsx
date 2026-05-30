@@ -9,7 +9,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-
 } from "@/components/ui/select";
 import { SlideInFromBottom } from "../SlideInFromBottom";
 
@@ -19,18 +18,6 @@ export interface ClientFormData {
   state: string;
   city: string;
   referralSource: string;
-}
-
-} from "@/components/ui/select"
-import { SlideInFromBottom } from "../SlideInFromBottom"
-
-
-type ClientFormData = {
-  fullName: string
-  email: string
-  state: string
-  city: string
-  referralSource: string
 }
 
 interface ClientProfileFormProps {
