@@ -37,7 +37,7 @@ async function getPreferences(): Promise<NotificationPreferences> {
   }
   try {
     return JSON.parse(prefCookie);
-  } catch (e) {
+  } catch {
     return DEFAULT_PREFERENCES;
   }
 }
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     const prefs = await request.json();
     await savePreferences(prefs);
     return NextResponse.json(prefs);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update preferences" }, { status: 500 });
   }
 }
