@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -27,6 +27,98 @@ export interface SettingsTabsShellProps {
 }
 
 export function SettingsTabsShell({
+	...props
+}: SettingsTabsShellProps) {
+	return (
+		<Suspense fallback={<SettingsTabsShellFallback {...props} />}>
+			<SettingsTabsShellContent {...props} />
+		</Suspense>
+	);
+}
+
+function SettingsTabsShellFallback({
+	tabs,
+	defaultTab,
+	title,
+	description,
+	navHeader,
+	navFooter,
+	className,
+}: SettingsTabsShellProps) {
+	const enabledTabs = tabs.filter((tab) => !tab.disabled);
+	const fallbackTab = defaultTab ?? enabledTabs[0]?.value ?? tabs[0]?.value;
+	const activeTabConfig = tabs.find((tab) => tab.value === fallbackTab);
+
+	if (tabs.length === 0) {
+		return null;
+	}
+
+	return (
+		<section
+			className={cn(
+				"grid gap-6 lg:grid-cols-[16rem_1fr] lg:items-start",
+				className,
+			)}
+		>
+			<aside className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+				{navHeader && <div className="mb-4">{navHeader}</div>}
+
+				<nav className="space-y-1" aria-label={title ?? "Settings sections"}>
+					{tabs.map((tab) => {
+						const isActive = tab.value === fallbackTab;
+
+						return (
+							<div
+								key={tab.value}
+								className={cn(
+									"block w-full rounded-md px-3 py-2 text-left transition-colors",
+									tab.disabled && "opacity-50",
+									isActive
+										? "bg-[#F4F3FE] text-[#605DEC]"
+										: "text-gray-700",
+								)}
+							>
+								<span className="block text-sm font-medium">{tab.label}</span>
+								{tab.description && (
+									<span
+										className={cn(
+											"mt-0.5 block text-xs",
+											isActive ? "text-[#605DEC]" : "text-gray-500",
+										)}
+									>
+										{tab.description}
+									</span>
+								)}
+							</div>
+						);
+					})}
+				</nav>
+
+				{navFooter && <div className="mt-4">{navFooter}</div>}
+			</aside>
+
+			<div className="min-w-0 rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+				{(title || description || activeTabConfig) && (
+					<div className="mb-5 border-b border-gray-200 pb-4">
+						{title && <p className="text-sm font-medium text-[#605DEC]">{title}</p>}
+						<h2 className="mt-1 text-xl font-semibold text-gray-900">
+							{activeTabConfig?.label}
+						</h2>
+						{description && (
+							<p className="mt-2 max-w-2xl text-sm text-gray-600">
+								{description}
+							</p>
+						)}
+					</div>
+				)}
+
+				<div>{activeTabConfig?.content}</div>
+			</div>
+		</section>
+	);
+}
+
+function SettingsTabsShellContent({
 	tabs,
 	defaultTab,
 	queryParam = "tab",
