@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import JobCard from "./JobCard";
+import AppliedJobsList from "./AppliedJobsList";
 
 const EmptyState = ({ text }: { text: string }) => (
   <div className="py-20 text-center text-sm text-gray-500">
@@ -47,7 +48,7 @@ const TabPages = () => {
       <div className="mt-4">
         {activeTab === "available" && <JobCard />}
         {activeTab === "active" && <EmptyState text="No active jobs yet." />}
-        {activeTab === "applied" && <EmptyState text="No applied jobs yet." />}
+        {activeTab === "applied" && <AppliedJobsList />}
         {activeTab === "completed" && <EmptyState text="No completed jobs yet." />}
       </div>
     </div>
