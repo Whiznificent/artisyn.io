@@ -1,6 +1,7 @@
 "use client";
 import { useState, Suspense } from "react";
 import { useWallet } from "@/context/WalletProvider";
+import type { Job } from "../dummyjobs";
 import { jobs } from "../dummyjobs";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
@@ -12,7 +13,7 @@ const JobCard = () => {
   const { publicKey, connected } = useWallet();
   const [statusMap, setStatusMap] = useState<Record<number, { state: string; message?: string }>>({});
 
-  const applyToJob = async (job: any, idx: number) => {
+  const applyToJob = async (job: Job, idx: number) => {
     if (!connected || !publicKey) {
       setStatusMap((s) => ({ ...s, [idx]: { state: "error", message: "Connect your wallet to apply." } }));
       return;
