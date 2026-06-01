@@ -6,6 +6,7 @@ import AppliedJobsList from "./AppliedJobsList";
 import { jobs } from "../dummyjobs";
 import Image from "next/image";
 import bgImg from "../(assets)/bg.png";
+import CompletedJobsList from "./CompletedJobsList";
 
 const EmptyState = ({ text }: { text: string }) => (
   <div className="py-20 text-center text-sm text-gray-500">
@@ -98,7 +99,7 @@ const TabPages = () => {
         )}
         {activeTab === "active" && <ActiveJobCard />}
         {activeTab === "applied" && <AppliedJobsList />}
-        {activeTab === "completed" && <EmptyState text="No completed jobs yet." />}
+        {activeTab === "completed" && <CompletedJobsList />}
       </div>
     </div>
   );
