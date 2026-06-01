@@ -1,6 +1,6 @@
 "use client";
 import { AccountTypeSelection } from "@/components/artisan/account-type-selection";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArtisanProfileStep1 } from "@/components/artisan/artisan-profile-step1";
@@ -171,11 +171,13 @@ export default function Page() {
 
   const handleArtisanStep2Complete = async (data: Partial<ArtisanFormData>) => {
 
+    // Return if app is already in loading state.
     if(isLoading) return;
 
+    // Use merged local object to handle async React state updates.
     const updatedArtisanData = {...artisanData, ...data};
-    setArtisanData(updatedArtisanData);
 
+    setArtisanData(updatedArtisanData);
     setIsLoading(true);
 
     try {
