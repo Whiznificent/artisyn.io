@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 
 import { PortfolioGallery } from "@/components/artisan/portfolio-gallery";
+import { PublicProfileHero } from "@/components/artisan/public-profile-hero";
 import {
   PublicProfileAboutSection,
-  PublicProfileHeroSection,
   PublicProfileStatsSection,
   type PublicArtisanProfile,
 } from "@/components/artisan/public-profile-sections";
@@ -191,7 +191,18 @@ export default async function ArtisanProfilePage({
 
   return (
     <main className="min-h-screen bg-white">
-      <PublicProfileHeroSection artisan={artisan} />
+      <PublicProfileHero
+        artisan={{
+          name: artisan.name,
+          avatar: artisan.image,
+          category: artisan.category,
+          location: artisan.location,
+          verified: artisan.verified,
+          rating: artisan.rating,
+          reviewCount: artisan.reviewCount,
+          completedJobs: artisan.completedJobs,
+        }}
+      />
       <PublicProfileStatsSection artisan={artisan} />
       <PublicProfileAboutSection artisan={artisan} />
 
