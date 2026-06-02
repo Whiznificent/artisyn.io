@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { Search } from "lucide-react";
 import {
   usePathname,
@@ -87,7 +88,19 @@ function sortArtisans(
   });
 }
 
-export default function ArtisanSearchPage() {
+function SearchPageFallback() {
+  return (
+    <main className="min-h-screen bg-[#F8FAFC] px-4 py-8 text-[#020817] md:px-6 md:py-10">
+      <section className="mx-auto flex max-w-7xl flex-col gap-6">
+        <div className="rounded-xl border border-[#E2E8F0] bg-white p-6 md:p-7">
+          <p className="text-sm text-[#64748B]">Loading artisan search...</p>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function ArtisanSearchPageContent() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -328,5 +341,13 @@ export default function ArtisanSearchPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function ArtisanSearchPage() {
+  return (
+    <Suspense fallback={<SearchPageFallback />}>
+      <ArtisanSearchPageContent />
+    </Suspense>
   );
 }
