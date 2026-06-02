@@ -134,17 +134,19 @@ export function FilterSidebar({
   return (
     <aside
       className={cn(
-        "w-full rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-sm",
+        "w-full rounded-xl border border-[#E2E8F0] bg-white p-5",
         className
       )}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-[#605DEC]">Search Filters</p>
-          <h2 className="mt-1 text-xl font-semibold text-[#020817]">{title}</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#64748B]">
+            Filters
+          </p>
+          <h2 className="mt-2 text-lg font-semibold text-[#0F172A]">{title}</h2>
         </div>
         <Button
-          className="rounded-xl border-[#E2E8F0] text-[#475569]"
+          className="rounded-md border-[#E2E8F0] bg-white text-[#475569] shadow-none"
           onClick={resetFilters}
           type="button"
           variant="outline"
@@ -153,7 +155,7 @@ export function FilterSidebar({
         </Button>
       </div>
 
-      <div className="mt-6 space-y-6">
+      <div className="mt-5 space-y-5">
         <div className="space-y-2">
           <Label className="text-sm font-medium text-[#334155]" htmlFor="category">
             Category
@@ -169,7 +171,7 @@ export function FilterSidebar({
           >
             <SelectTrigger
               aria-label="Category"
-              className="h-11 rounded-xl border-[#E2E8F0] bg-white text-[#020817]"
+              className="h-9 rounded-md border-[#E2E8F0] bg-[#F8FAFC] text-sm text-[#020817]"
               id="category"
             >
               <SelectValue placeholder="Select a category" />
@@ -190,7 +192,7 @@ export function FilterSidebar({
             Location
           </Label>
           <Input
-            className="h-11 rounded-xl border-[#E2E8F0] bg-white text-[#020817]"
+            className="h-9 rounded-md border-[#E2E8F0] bg-[#F8FAFC] text-sm text-[#020817]"
             id="location"
             onChange={(event) => handleFieldChange("location", event.target.value)}
             placeholder="City or area"
@@ -203,7 +205,7 @@ export function FilterSidebar({
             Verification
           </Label>
           <label
-            className="flex items-center gap-3 rounded-2xl border border-[#E2E8F0] px-4 py-3 text-sm text-[#334155]"
+            className="flex items-center gap-3 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2.5 text-sm text-[#334155]"
             htmlFor="verified-only"
           >
             <input
@@ -230,7 +232,7 @@ export function FilterSidebar({
                 Minimum
               </Label>
               <Input
-                className="h-11 rounded-xl border-[#E2E8F0] bg-white text-[#020817]"
+                className="h-9 rounded-md border-[#E2E8F0] bg-[#F8FAFC] text-sm text-[#020817]"
                 id="min-price"
                 inputMode="numeric"
                 min={0}
@@ -251,7 +253,7 @@ export function FilterSidebar({
                 Maximum
               </Label>
               <Input
-                className="h-11 rounded-xl border-[#E2E8F0] bg-white text-[#020817]"
+                className="h-9 rounded-md border-[#E2E8F0] bg-[#F8FAFC] text-sm text-[#020817]"
                 id="max-price"
                 inputMode="numeric"
                 min={0}
